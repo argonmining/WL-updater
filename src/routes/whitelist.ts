@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { ofetch } from 'ofetch';
 import { getTransaction } from '../services/kaspa';
+import { updateWhitelist } from '../services/whitelist';
 
 const router = Router();
 
@@ -99,22 +100,6 @@ async function validateKaspaTransaction(
   }
 }
 
-/**
- * Updates whitelist address via external API
- * @param whitelistID - ID of whitelist entry to update
- * @param newAddress - New address to set
- * @returns Response from whitelist update API
- */
-async function updateWhitelistAddress(
-  whitelistID: string,
-  newAddress: string
-): Promise<any> {
-  return ofetch(`https://katapi.nachowyborski.xyz/admin/whitelist/patch/${whitelistID}`, {
-    method: 'POST',
-    body: { address: newAddress }
-  });
-}
-
 router.post('/update-whitelist', async (req: Request<{}, {}, UpdateWhitelistRequest>, res: Response) => {
   try {
     const { feeAmount, feeAddress, oldAddress, newAddress, whitelistID, txnID } = req.body;
@@ -130,8 +115,8 @@ router.post('/update-whitelist', async (req: Request<{}, {}, UpdateWhitelistRequ
       return res.status(400).json({ error: 'Invalid transaction' });
     }
 
-    // Update whitelist address
-    const updateResult = await updateWhitelistAddress(whitelistID, newAddress);
+    // Update whitelist address using the service function
+    const updateResult = await updateWhitelist(whitelistID, newAddress);
 
     res.json({ 
       success: true,
