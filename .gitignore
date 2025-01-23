@@ -2,3 +2,7 @@ node_modules
 pnpm-lock.yaml
 dist/
 .env
+package-lock.json
+ecosystem.config.js
+.DS_Store
+whitelist.nachowyborski.xyz

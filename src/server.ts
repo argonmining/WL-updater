@@ -1,11 +1,14 @@
 import express from 'express';
 import { randomAmountRouter } from './routes/randomAmount';
 import { whitelistRouter } from './routes/whitelist';
+import cors from 'cors';
+
 
 export function createServer() {
   const app = express();
   
   app.use(express.json());
+  app.use(cors())
   
   // Routes
   app.use('/api', randomAmountRouter);
